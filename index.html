@@ -1,16 +1,35 @@
 <!DOCTYPE html>
-<html lang="en-us">
-    <head>
-        <title>How much do you know</title>
-        <meta>
-    </head>
-    <body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How much do you know</title>
+    <link href="style.css" rel="stylesheet" />
+  </head>
 
-
-
-
-
-        
-
-    </body>
+  <body>
+    <section class="countdown">60</section>
+    <section class="scoreList">
+      <button class="scoring">Highscores</button>
+    </section>
+    <section class="container" id="main">
+      <section id="question-container" class="hide">
+        <section id="question">
+          <section id="currentQuestion"></section>
+          <section class="answerBtns" id="btn-grid"></section>
+        </section>
+      </section>
+      <section class="startBtn">
+        <h2>
+          IT'S TURTLE TIME...
+          <hr />
+        </h2>
+        Try to answer as many questions as you can in the time given. All wrong
+        answers will penalize your time and score.
+        <button id="start-btn" class="start-btn btn">Start</button>
+      </section>
+    </section>
+    <script src="score.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
