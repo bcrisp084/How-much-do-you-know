@@ -4,8 +4,9 @@ const startButton = document.querySelector("#start-btn");
 const questionContainerEl = document.querySelector("#question-container");
 const questionEl = document.querySelector("#question");
 const startButtonContainer = document.querySelector(".startBtn");
-const highscoreButton = document.querySelector(".scoring");
+var highscoreButton = document.querySelector(".scoring");
 let currentQuestionIndex = 0;
+var timerInterval;
 
 startButton.addEventListener("click", startGame);
 
@@ -18,10 +19,19 @@ function startGame() {
 }
 
 function setQuestion(question) {
+  if (currentQuestionIndex >= questionList.length) {
+    gameOver();
+    return;
+  }
+  var main = document.getElementById("main");
   const currentQuestion = questionList[currentQuestionIndex].question;
   const h1 = document.createElement("h1");
   h1.innerHTML = currentQuestion;
-  document.getElementById("currentQuestion").append(h1);
+  main.append(h1);
+  var btnGrid = document.createElement("div");
+  btnGrid.setAttribute("class", "answerBtns");
+  btnGrid.setAttribute("id", "btn-grid");
+  main.append(btnGrid);
   for (
     let index = 0;
     index < questionList[currentQuestionIndex].answers.length;
@@ -36,19 +46,17 @@ function setQuestion(question) {
       let currentQuestion = questionList[currentQuestionIndex].correctAnswer;
       let currentAnswer = event.target.getAttribute("data-answer");
       if (currentAnswer === currentQuestion) {
-        h1.innerHTML = "";
-        document.querySelectorAll(".options").forEach((e) => e.remove());
+        main.innerHTML = "";
         currentQuestionIndex++;
         var div = document.createElement("div");
-        document.getElementById("main").append(div);
+        main.append(div);
         div.innerHTML = "CORRECT";
         setQuestion(currentQuestionIndex);
       } else if (currentAnswer !== currentQuestion) {
+        main.innerHTML = "";
         var div = document.createElement("div");
-        document.getElementById("main").append(div);
+        main.append(div);
         div.innerHTML = "INCORRECT";
-        h1.innerHTML = "";
-        document.querySelectorAll(".options").forEach((e) => e.remove());
         currentQuestionIndex++;
         setQuestion(currentQuestionIndex);
       }
@@ -56,20 +64,49 @@ function setQuestion(question) {
         secondsLeft = secondsLeft - 10;
       }
     });
-    document.getElementById("btn-grid").appendChild(btn);
+    btnGrid.appendChild(btn);
   }
 }
 
+function gameOver() {
+  clearInterval(timerInterval);
+  var main = document.getElementById("main");
+  main.innerHTML = "";
+  var h1 = document.createElement("h1");
+  h1.innerHTML = "Game over your highscore is " + secondsLeft;
+  main.append(h1);
+  var input = document.createElement("input");
+  main.append(input);
+  var button = document.createElement("button");
+  button.innerText = "SUBMIT";
+  main.append(button);
+  button.addEventListener("click", function (event) {
+    var highscoresStr = window.localStorage.getItem("highscores");
+    var highscores = [];
+    if (highscoresStr && highscoresStr !== "undefined") {
+      highscores = JSON.parse(highscoresStr);
+    }
+    var score = { initials: input.value, score: secondsLeft };
+    highscores.push(score);
+    window.localStorage.setItem("highscores", JSON.stringify(highscores));
+    window.location.href = "highscores.html";
+    return;
+  });
+}
+
 function setTime() {
-  var timerInterval = setInterval(function () {
+  timerInterval = setInterval(function () {
     secondsLeft--;
     startTimer.textContent = secondsLeft;
-    if (secondsLeft === 0) {
+    if (secondsLeft <= 0) {
       clearInterval(timerInterval);
-      //redirect to highscore once game has ended
     }
   }, 1000);
 }
+
+highscoreButton.addEventListener("click", function () {
+  location.href = "highscores.html";
+});
 
 const questionList = [
   {
@@ -108,11 +145,3 @@ const questionList = [
     correctAnswer: "The party wagon",
   },
 ];
-
-//figure out what the correct answer is
-// figure out if the answer was correct
-//    1a.if the answer was correct move on to the next question
-//  1b.if the answer was incorrect deduct time from counter than move to next question
-//if the game is over
-//we prompt the user to enter initials and save score in local storage
-//redirect to high score page
