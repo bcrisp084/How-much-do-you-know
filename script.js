@@ -90,7 +90,6 @@ function gameOver() {
     highscores.push(score);
     window.localStorage.setItem("highscores", JSON.stringify(highscores));
     window.location.href = "highscores.html";
-    return;
   });
 }
 
