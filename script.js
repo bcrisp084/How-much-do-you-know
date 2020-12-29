@@ -9,7 +9,7 @@ let currentQuestionIndex = 0;
 var timerInterval;
 
 startButton.addEventListener("click", startGame);
-
+//function to get the game started
 function startGame() {
   startButton.classList.add("hide");
   questionContainerEl.classList.remove("hide");
@@ -17,7 +17,7 @@ function startGame() {
   setTime();
   setQuestion(currentQuestionIndex);
 }
-
+//function to set the questions
 function setQuestion(question) {
   if (currentQuestionIndex >= questionList.length) {
     gameOver();
@@ -32,6 +32,7 @@ function setQuestion(question) {
   btnGrid.setAttribute("class", "answerBtns");
   btnGrid.setAttribute("id", "btn-grid");
   main.append(btnGrid);
+  //for loop that runs throught the questions and answers
   for (
     let index = 0;
     index < questionList[currentQuestionIndex].answers.length;
@@ -45,6 +46,7 @@ function setQuestion(question) {
     btn.addEventListener("click", function (event) {
       let currentQuestion = questionList[currentQuestionIndex].correctAnswer;
       let currentAnswer = event.target.getAttribute("data-answer");
+      //conditional statement that determines if the userschoice was correct
       if (currentAnswer === currentQuestion) {
         main.innerHTML = "";
         currentQuestionIndex++;
@@ -60,6 +62,7 @@ function setQuestion(question) {
         currentQuestionIndex++;
         setQuestion(currentQuestionIndex);
       }
+      //conditional statement that runs time off the clock if the users choice was incorrect
       if (currentAnswer !== currentQuestion) {
         secondsLeft = secondsLeft - 10;
       }
@@ -67,7 +70,7 @@ function setQuestion(question) {
     btnGrid.appendChild(btn);
   }
 }
-
+//function to end the game
 function gameOver() {
   clearInterval(timerInterval);
   var main = document.getElementById("main");
@@ -83,6 +86,7 @@ function gameOver() {
   button.addEventListener("click", function (event) {
     var highscoresStr = window.localStorage.getItem("highscores");
     var highscores = [];
+    //conditional statement to store the user score and intials in local storage
     if (highscoresStr && highscoresStr !== "undefined") {
       highscores = JSON.parse(highscoresStr);
     }
@@ -92,7 +96,7 @@ function gameOver() {
     window.location.href = "highscores.html";
   });
 }
-
+//function that gets the timer going once the game has been started
 function setTime() {
   timerInterval = setInterval(function () {
     secondsLeft--;
@@ -102,11 +106,11 @@ function setTime() {
     }
   }, 1000);
 }
-
+//redirect to highscore page
 highscoreButton.addEventListener("click", function () {
   location.href = "highscores.html";
 });
-
+//question object
 const questionList = [
   {
     question: "What transformed the turtles?",
