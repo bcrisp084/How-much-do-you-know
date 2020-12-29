@@ -80,3 +80,11 @@ body {
 .hide {
   display: none;
 }
+
+#home {
+  margin-top: 200px;
+}
+
+#clear {
+  margin-left: 75px;
+}
